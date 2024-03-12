@@ -62,6 +62,10 @@ public class User {
             return "Password cannot contain 5 consecutive identical characters or numbers";
         }
 
+        if (!validatePasswordNoThreeSameSpecialCharacters()) {
+            return "Password cannot contain 3 consecutive identical special characters";
+        }
+
         return "Password meets all requirements";
     }
 
@@ -134,5 +138,20 @@ public class User {
         return count == 4;
     }
 
-
+    private boolean validatePasswordNoThreeSameSpecialCharacters() {
+        int count = 0;
+        for (int i = 0; i < password.length() - 1; i++) {
+            if (specialCharacters.contains(password.charAt(i)) && specialCharacters.contains(password.charAt(i + 1))) {
+                if (password.charAt(i) == password.charAt(i + 1)) {
+                    count++;
+                }
+            } else {
+                count = 0;
+            }
+            if (count == 2) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
