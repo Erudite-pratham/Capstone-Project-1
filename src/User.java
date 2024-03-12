@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class User {
     private final ArrayList<Character> specialCharacters = new ArrayList<>();
@@ -21,83 +20,72 @@ public class User {
         specialCharacters.add('~');
     }
 
-    void instructions() {
-        System.out.println("----------Password Instructions----------");
-        int i = 0;
-        System.out.println(++i + ". Password length has to be of minimum of 12 character");
-        System.out.println(++i + ". Password length has to be of maximum of 20 character");
-        System.out.println(++i + ". Password string must consist of Characters - Upper Case (A-Z)");
-        System.out.println();
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    void setCredentials() {
-        Scanner scn = new Scanner(System.in);
-        System.out.print("Enter username: ");
-        this.username = scn.nextLine();
-        System.out.print("Enter password: ");
-        this.password = scn.nextLine();
+    public void setPassword(String password) {
+        this.password = password;
     }
 
-    String validatePassword() {
-
-        if (!validatePasswordLength()) {
-            return "Password must be between 12 and 20 characters long";
-        }
-
-        if (!validatePasswordCase()) {
-            return "Password must contain both upper and lower case characters";
-        }
-        if (!validatePasswordNoUsername()) {
-            return "Password cannot contain the username";
-        }
-        if (!validatePasswordThreeSpecialCharacters()) {
-            return "Password must contain at least 3 special characters";
-        }
-
-        if (!validatePasswordStartsWithSpecialOrNumber()) {
-            return "Password must start with a special character or a two-digit number";
-        }
-
-        if (!validatePasswordNoFiveSameCharacters()) {
-            return "Password cannot contain 5 consecutive identical characters or numbers";
-        }
-
-        if (!validatePasswordNoThreeSameSpecialCharacters()) {
-            return "Password cannot contain 3 consecutive identical special characters";
-        }
-
-        return "Password meets all requirements";
+    void validatePassword() throws Exception {
+        isPasswordLengthValid();
+        containsMinThreeLowerCaseChar();
+        containsMinThreeUpperCaseChar();
+        containsUsername();
+        minThreeSpecialCharacters();
+        startsWithSpecialCharOrNumber();
+        fiveConsecutiveSameCharacters();
+        threeConsecutiveSameSpecialCharacters();
     }
 
-    private boolean validatePasswordLength() {
-        return password.length() >= 12 && password.length() <= 20;
+    private void isPasswordLengthValid() throws Exception {
+        if (!(password.length() >= 12 && password.length() <= 20)) {
+            throw new PasswordLengthException();
+        }
     }
 
-    private boolean validatePasswordCase() {
-        int upperCount = 0, lowerCount = 0;
+    private void containsMinThreeLowerCaseChar() throws Exception {
+        int lowerCount = 0;
+        for (int i = 0; i < password.length(); i++) {
+            char c = password.charAt(i);
+            if (c >= 'a' && c <= 'z') {
+                lowerCount++;
+            }
+            if (lowerCount == 3) {
+                break;
+            }
+        }
+        if (lowerCount < 3) {
+            throw new PasswordLowerCaseException();
+        }
+    }
+
+    private void containsMinThreeUpperCaseChar() throws Exception {
+        int upperCount = 0;
         for (int i = 0; i < password.length(); i++) {
             char c = password.charAt(i);
             if (c >= 'A' && c <= 'Z') {
                 upperCount++;
             }
-            if (c >= 'a' && c <= 'z') {
-                lowerCount++;
-            }
-            if (upperCount >= 3 && lowerCount >= 3) {
-                return true;
+            if (upperCount == 3) {
+                break;
             }
         }
-        return false;
+        if (upperCount < 3) {
+            throw new PasswordUpperCaseException();
+        }
     }
 
-    private boolean validatePasswordNoUsername() {
+    private void containsUsername() throws Exception {
         String username = this.username.toLowerCase();
         String password = this.password.toLowerCase();
-        return !password.contains(username);
+        if (password.contains(username)) {
+            throw new UsernameInPasswordException();
+        }
     }
 
-
-    private boolean validatePasswordThreeSpecialCharacters() {
+    private void minThreeSpecialCharacters() throws Exception {
         int count = 0;
         for (int i = 0; i < this.password.length(); i++) {
             char c = this.password.charAt(i);
@@ -108,22 +96,21 @@ public class User {
                 break;
             }
         }
-        return count == 3;
-    }
 
-    private boolean validatePasswordStartsWithSpecialOrNumber() {
-        char firstChar = this.password.charAt(0);
-        char secondChar = this.password.charAt(1);
-        if (this.specialCharacters.contains(firstChar)) {
-            return true;
-        } else if (firstChar >= '0' && firstChar <= '9' && secondChar >= '0' && secondChar <= '9') {
-            return true;
-        } else {
-            return false;
+        if (count < 3) {
+            throw new SpecialCharactersException();
         }
     }
 
-    private boolean validatePasswordNoFiveSameCharacters() {
+    private void startsWithSpecialCharOrNumber() throws Exception {
+        char firstChar = this.password.charAt(0);
+        char secondChar = this.password.charAt(1);
+        if (!(this.specialCharacters.contains(firstChar) || firstChar >= '0' && firstChar <= '9' && secondChar >= '0' && secondChar <= '9')) {
+            throw new StartsWithSpecialOrNumberException();
+        }
+    }
+
+    private void fiveConsecutiveSameCharacters() throws Exception {
         int count = 0;
         for (int i = 0; i < password.length() - 1; i++) {
             if (password.charAt(i) == password.charAt(i + 1)) {
@@ -132,13 +119,13 @@ public class User {
                 count = 0;
             }
             if (count == 4) {
-                break;
+                throw new FiveConsecutiveSameCharactersException();
             }
         }
-        return count == 4;
+
     }
 
-    private boolean validatePasswordNoThreeSameSpecialCharacters() {
+    private void threeConsecutiveSameSpecialCharacters() throws Exception {
         int count = 0;
         for (int i = 0; i < password.length() - 1; i++) {
             if (specialCharacters.contains(password.charAt(i)) && specialCharacters.contains(password.charAt(i + 1))) {
@@ -149,9 +136,8 @@ public class User {
                 count = 0;
             }
             if (count == 2) {
-                return false;
+                throw new ThreeConsecutiveSameSpecialCharactersException();
             }
         }
-        return true;
     }
 }
