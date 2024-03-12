@@ -50,6 +50,10 @@ public class User {
         if (!validatePasswordNoUsername()) {
             return "Password cannot contain the username";
         }
+        if (!validatePasswordThreeSpecialCharacters()) {
+            return "Password must contain at least 3 special characters";
+        }
+
 
         return "Password meets all requirements";
     }
@@ -81,5 +85,19 @@ public class User {
         return !password.contains(username);
     }
 
+
+    private boolean validatePasswordThreeSpecialCharacters() {
+        int count = 0;
+        for (int i = 0; i < this.password.length(); i++) {
+            char c = this.password.charAt(i);
+            if (specialCharacters.contains(c)) {
+                count++;
+            }
+            if (count == 3) {
+                break;
+            }
+        }
+        return count == 3;
+    }
 
 }
