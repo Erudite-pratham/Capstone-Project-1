@@ -47,6 +47,9 @@ public class User {
         if (!validatePasswordCase()) {
             return "Password must contain both upper and lower case characters";
         }
+        if (!validatePasswordNoUsername()) {
+            return "Password cannot contain the username";
+        }
 
         return "Password meets all requirements";
     }
@@ -70,6 +73,12 @@ public class User {
             }
         }
         return false;
+    }
+
+    private boolean validatePasswordNoUsername() {
+        String username = this.username.toLowerCase();
+        String password = this.password.toLowerCase();
+        return !password.contains(username);
     }
 
 
