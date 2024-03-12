@@ -58,6 +58,10 @@ public class User {
             return "Password must start with a special character or a two-digit number";
         }
 
+        if (!validatePasswordNoFiveSameCharacters()) {
+            return "Password cannot contain 5 consecutive identical characters or numbers";
+        }
+
         return "Password meets all requirements";
     }
 
@@ -114,5 +118,21 @@ public class User {
             return false;
         }
     }
+
+    private boolean validatePasswordNoFiveSameCharacters() {
+        int count = 0;
+        for (int i = 0; i < password.length() - 1; i++) {
+            if (password.charAt(i) == password.charAt(i + 1)) {
+                count++;
+            } else {
+                count = 0;
+            }
+            if (count == 4) {
+                break;
+            }
+        }
+        return count == 4;
+    }
+
 
 }
