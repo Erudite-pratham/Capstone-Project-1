@@ -54,6 +54,9 @@ public class User {
             return "Password must contain at least 3 special characters";
         }
 
+        if (!validatePasswordStartsWithSpecialOrNumber()) {
+            return "Password must start with a special character or a two-digit number";
+        }
 
         return "Password meets all requirements";
     }
@@ -98,6 +101,18 @@ public class User {
             }
         }
         return count == 3;
+    }
+
+    private boolean validatePasswordStartsWithSpecialOrNumber() {
+        char firstChar = this.password.charAt(0);
+        char secondChar = this.password.charAt(1);
+        if (this.specialCharacters.contains(firstChar)) {
+            return true;
+        } else if (firstChar >= '0' && firstChar <= '9' && secondChar >= '0' && secondChar <= '9') {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }
