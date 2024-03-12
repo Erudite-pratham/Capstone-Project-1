@@ -1,8 +1,25 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class User {
+    private final ArrayList<Character> specialCharacters = new ArrayList<>();
     private String username;
     private String password;
+
+    User() {
+        specialCharacters.add('!');
+        specialCharacters.add('@');
+        specialCharacters.add('#');
+        specialCharacters.add('$');
+        specialCharacters.add('%');
+        specialCharacters.add('&');
+        specialCharacters.add('*');
+        specialCharacters.add('(');
+        specialCharacters.add(')');
+        specialCharacters.add('_');
+        specialCharacters.add('-');
+        specialCharacters.add('~');
+    }
 
     void instructions() {
         System.out.println("----------Password Instructions----------");
@@ -21,19 +38,39 @@ public class User {
         this.password = scn.nextLine();
     }
 
-    boolean validatePassword() {
-        if (validatePasswordMinLength() && validatePasswordMaxLength()) {
-            return true;
+    String validatePassword() {
+
+        if (!validatePasswordLength()) {
+            return "Password must be between 12 and 20 characters long";
         }
 
+        if (!validatePasswordCase()) {
+            return "Password must contain both upper and lower case characters";
+        }
+
+        return "Password meets all requirements";
+    }
+
+    private boolean validatePasswordLength() {
+        return password.length() >= 12 && password.length() <= 20;
+    }
+
+    private boolean validatePasswordCase() {
+        int upperCount = 0, lowerCount = 0;
+        for (int i = 0; i < password.length(); i++) {
+            char c = password.charAt(i);
+            if (c >= 'A' && c <= 'Z') {
+                upperCount++;
+            }
+            if (c >= 'a' && c <= 'z') {
+                lowerCount++;
+            }
+            if (upperCount >= 3 && lowerCount >= 3) {
+                return true;
+            }
+        }
         return false;
     }
 
-    private boolean validatePasswordMinLength() {
-        return password.length() >= 12;
-    }
 
-    private boolean validatePasswordMaxLength() {
-        return password.length() <= 20;
-    }
 }

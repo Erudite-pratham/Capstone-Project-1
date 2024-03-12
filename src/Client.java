@@ -4,13 +4,7 @@ public class Client {
         User user = new User();
         user.instructions();
         user.setCredentials();
-
-        boolean result = user.validatePassword();
-
-        if (result) {
-            System.out.println("Valid password");
-        } else {
-            System.out.println("Invalid password");
-        }
+        String result = user.validatePassword();
+        System.out.println(result);
     }
 }
