@@ -11,6 +11,11 @@ public class Client {
         while (!exit) {
             System.out.print("Enter username: ");
             String username = scn.nextLine();
+            if (username.isEmpty()) {
+                System.out.println("Username cannot be empty");
+                System.out.print("Please enter username: ");
+                username = scn.nextLine();
+            }
             user.setUsername(username);
 
             int count = 1;
@@ -24,7 +29,8 @@ public class Client {
                     exit = true;
                     break;
                 } catch (Exception error) {
-                    System.out.println(error.getMessage());
+                    System.out.println("Error: " + error.getMessage());
+                    System.out.println("Your last username is " + user.getUsername() + " and password is " + user.getPassword());
                     if (count == 3) {
                         System.out.print("Do you want to continue Yes/No: ");
                         String yesOrNo = scn.nextLine().toLowerCase();
@@ -32,7 +38,9 @@ public class Client {
                             exit = true;
                             break;
                         }
+                        System.out.println("Your last username is " + user.getUsername() + " and password is " + user.getPassword());
                     }
+
                 }
 
                 if (count == 6) {
