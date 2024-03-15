@@ -12,7 +12,7 @@ public class Client {
             System.out.print("Enter username: ");
             String username = scn.nextLine();
             if (username.isEmpty()) {
-                System.out.println("Username cannot be empty");
+                System.out.println("Labhesh username cannot be empty 🥲");
                 System.out.print("Please enter username: ");
                 username = scn.nextLine();
             }
