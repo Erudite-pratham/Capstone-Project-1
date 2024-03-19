@@ -7,15 +7,27 @@ public class Client {
 
         Scanner scn = new Scanner(System.in);
 
+        int flag = 0;
         boolean exit = false;
         while (!exit) {
-            System.out.print("Enter username: ");
+            if (flag == 0) {
+                System.out.print("Enter username: ");
+            } else if (flag == 1) {
+                System.out.println("Username cannot be empty");
+                System.out.print("Please enter username: ");
+            } else {
+                System.out.print("Username cannot contain space: ");
+            }
             String username = scn.nextLine();
             if (username.isEmpty()) {
-                System.out.println("Labhesh username cannot be empty 🥲");
-                System.out.print("Please enter username: ");
-                username = scn.nextLine();
+                flag = 1;
+                continue;
             }
+            if (username.contains(" ")) {
+                flag = 2;
+                continue;
+            }
+            flag = 0;
             user.setUsername(username);
 
             int count = 1;
@@ -37,12 +49,13 @@ public class Client {
                         if (yesOrNo.equals("n") || yesOrNo.equals("no")) {
                             exit = true;
                             break;
+                        } else if (!yesOrNo.equals("y") && !yesOrNo.equals("yes")) {
+                            exit = true;
+                            break;
                         }
                         System.out.println("Your last username is " + user.getUsername() + " and password is " + user.getPassword());
                     }
-
                 }
-
                 if (count == 6) {
                     break;
                 }
@@ -50,7 +63,5 @@ public class Client {
 
             }
         }
-
-
     }
 }
